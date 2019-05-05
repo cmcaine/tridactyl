@@ -1692,13 +1692,32 @@ if (fullscreenApiIsPrefixed) {
 }
 // }
 
+/** Expands all occurrences of "<.*>" to matching args.
+   @hidden
+ */
+
+//#content_helper
+export function parseaucmdargs(aucmd: string, args: AutocmdArgs): string {
+    const re = /^\"<(\w+)>\"$/
+    const aucmdarr = aucmd.split(" ").map((s: string) => {
+        const res = s.match(re)
+        if (res && args[res[1]]) {
+            s = args[res[1]]
+        }
+        return s
+    })
+    return aucmdarr.join(" ")
+}
 /** @hidden */
 //#content
-export async function loadaucmds(cmdType: "DocStart" | "DocLoad" | "DocEnd" | "TabEnter" | "TabLeft" | "FullscreenEnter" | "FullscreenLeft" | "FullscreenChange") {
+export async function loadaucmds(cmdType: AUCMDS, args?: AutocmdArgs) {
     const aucmds = await config.getAsync("autocmds", cmdType)
     const ausites = Object.keys(aucmds)
     const aukeyarr = ausites.filter(e => window.document.location.href.search(e) >= 0)
     for (const aukey of aukeyarr) {
+        if (args) {
+            aucmds[aukey] = parseaucmdargs(aucmds[aukey], args)
+        }
         controller.acceptExCmd(aucmds[aukey])
     }
 }
@@ -3145,11 +3164,24 @@ export function set(key: string, ...values: string[]) {
 }
 
 /** @hidden */
-//#background_helper
-const AUCMDS = ["DocStart", "DocLoad", "DocEnd", "TriStart", "TabEnter", "TabLeft", "FullscreenChange", "FullscreenEnter", "FullscreenLeft"]
+export const aucmdlit = <V extends keyof any>(v: V) => v
+export const AUCMDS = {
+    DOCEND: aucmdlit("DocEnd"),
+    DOCLOAD: aucmdlit("DocLoad"),
+    DOCSTART: aucmdlit("DocStart"),
+    DOWNLOADPOST: aucmdlit("DownloadPost"),
+    FULLSCREENCHANGE: aucmdlit("FullscreenChange"),
+    FULLSCREENENTER: aucmdlit("FullscreenEnter"),
+    FULLSCREENLEFT: aucmdlit("FullscreenLeft"),
+    TABENTER: aucmdlit("TabEnter"),
+    TABLEFT: aucmdlit("TabLeft"),
+    TRISTART: aucmdlit("TriStart"),
+}
+export type AUCMDS = (typeof AUCMDS)[keyof typeof AUCMDS]
+
 /** Set autocmds to run when certain events happen.
 
- @param event Curently, 'TriStart', 'DocStart', 'DocLoad', 'DocEnd', 'TabEnter', 'TabLeft', 'FullscreenChange', 'FullscreenEnter', and 'FullscreenLeft' are supported
+ @param event Currently, 'TriStart', 'DocStart', 'DocLoad', 'DownloadPost', 'DocEnd', 'TabEnter', 'TabLeft', 'FullscreenChange', 'FullscreenEnter', and 'FullscreenLeft' are supported
 
  @param url For DocStart, DocEnd, TabEnter, and TabLeft: a fragment of the URL on which the events will trigger, or a JavaScript regex (e.g, `/www\.amazon\.co.*\/`)
 
@@ -3167,8 +3199,19 @@ const AUCMDS = ["DocStart", "DocLoad", "DocEnd", "TriStart", "TabEnter", "TabLef
 export function autocmd(event: string, url: string, ...excmd: string[]) {
     // rudimentary run time type checking
     // TODO: Decide on autocmd event names
-    if (!AUCMDS.includes(event)) throw event + " is not a supported event."
+    if (!Object.values(AUCMDS).includes(event as AUCMDS)) throw event + " is not a supported event."
     config.set("autocmds", event, url, excmd.join(" "))
+}
+
+/** Remove autocmds
+    @param event Currently, 'TriStart', 'DocStart', 'DocLoad', 'DownloadPost', 'DocEnd', 'TabEnter', 'TabLeft', 'FullscreenChange', 'FullscreenEnter', and 'FullscreenLeft' are supported
+
+    @param url For DocStart, DocEnd, TabEnter, and TabLeft: a fragment of the URL on which the events will trigger, or a JavaScript regex (e.g, `/www\.amazon\.co.*\/`)
+*/
+//#background
+export function autocmddelete(event: string, url: string) {
+    if (!Object.values(AUCMDS).includes(event as AUCMDS)) throw event + " is not a supported event."
+    config.unset("autocmds", event, url)
 }
 
 /** Automatically open a domain and all its subdomains in a specified container.
@@ -3190,17 +3233,6 @@ export function autocmd(event: string, url: string, ...excmd: string[]) {
 //#background
 export function autocontain(domain: string, container: string) {
     config.set("autocontain", domain, container)
-}
-
-/** Remove autocmds
- @param event Curently, 'TriStart', 'DocStart', 'DocLoad', 'DocEnd', 'TabEnter', 'TabLeft', 'FullscreenChange', 'FullscreenEnter', and 'FullscreenLeft' are supported
-
- @param url For DocStart, DocEnd, TabEnter, and TabLeft: a fragment of the URL on which the events will trigger, or a JavaScript regex (e.g, `/www\.amazon\.co.*\/`)
-*/
-//#background
-export function autocmddelete(event: string, url: string) {
-    if (!AUCMDS.includes(event)) throw event + " is not a supported event."
-    config.unset("autocmds", event, url)
 }
 
 /**

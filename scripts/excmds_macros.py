@@ -39,7 +39,7 @@ class Signature:
             # Type declaration
             if ':' in param:
                 name, typ = map(str.strip, param.split(':'))
-                if (typ not in ('number', 'boolean', 'string', 'string[]', 'ModeName')
+                if (typ not in ('number', 'boolean', 'string', 'string[]', 'ModeName', 'AUCMDS', 'AutocmdArgs')
                         and '|' not in typ
                         and typ[0] not in ['"',"'"]
                    ):

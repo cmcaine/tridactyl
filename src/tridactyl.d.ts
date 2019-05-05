@@ -33,6 +33,13 @@ interface UIEvent {
     pageY: number
 }
 
+// Autocmd optional arguments
+interface AutocmdArgs {
+    url?: string
+    file?: string
+    size?: number
+}
+
 // This isn't an actual firefox type but it's nice to have one for this kind of object
 // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/find/find
 interface findResult {

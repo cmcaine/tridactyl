@@ -153,6 +153,19 @@ browser.tabs.onActivated.addListener(ev => {
         .catch(ignore)
 })
 
+// DownloadPost autocommand.
+browser.downloads.onChanged.addListener(async (ev: any) => {
+    if (ev.state && ev.state.current === "complete") {
+        const dlItem: browser.downloads.DownloadItem = (await browser.downloads.search({id: ev.id}))[0]
+        const args: AutocmdArgs = {
+            url: dlItem.url,
+            file: dlItem.filename,
+            size: dlItem.fileSize
+        }
+        messaging
+            .messageActiveTab("excmd_content", "loadaucmds", ["DownloadPost", args])
+    }
+})
 // }}}
 
 // {{{ AUTOCONTAINERS
