@@ -2556,12 +2556,7 @@ async function getnexttabs(tabid: number, n?: number) {
 */
 //#both
 export function repeat(n = 1, ...exstr: string[]) {
-    let cmd = controller.last_ex_str
-    if (exstr.length > 0) cmd = exstr.join(" ")
-    logger.debug("repeating " + cmd + " " + n + " times")
-    for (let i = 0; i < n; i++) {
-        controller.acceptExCmd(cmd)
-    }
+    controller.repeat(n, ...exstr)
 }
 
 /**

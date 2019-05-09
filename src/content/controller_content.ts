@@ -1,5 +1,5 @@
 import { isTextEditable } from "@src/lib/dom"
-import { contentState, ModeName } from "@src/content/state_content"
+import { ModeName, State } from "@src/content/state_content"
 import Logger from "@src/lib/logging"
 import * as controller from "@src/lib/controller"
 
@@ -46,7 +46,7 @@ function PrintableKey(k) {
  * might not arrive in the same order as the keydown events (e.g. user presses
  * A, then B, releases B and then A).
  */
-class KeyCanceller {
+export class KeyCanceller {
     private keyPress: KeyboardEvent[] = []
     private keyUp: KeyboardEvent[] = []
 
@@ -87,10 +87,8 @@ class KeyCanceller {
     }
 }
 
-export const canceller = new KeyCanceller()
-
 /** Accepts keyevents, resolves them to maps, maps to exstrs, executes exstrs */
-function* ParserController() {
+export function* Parser(state: State, canceller: KeyCanceller) {
     const parsers: { [mode_name in ModeName]: any } = {
         normal: keys => generic.parser("nmaps", keys),
         insert: keys => generic.parser("imaps", keys),
@@ -109,7 +107,7 @@ function* ParserController() {
 
                 // _just to be safe_, cache this to make the following
                 // code more thread-safe.
-                const currentMode = contentState.mode
+                const currentMode = state.mode
                 const textEditable = isTextEditable(keyevent.target as Element)
 
                 // This code was sort of the cause of the most serious bug in Tridactyl
@@ -122,13 +120,13 @@ function* ParserController() {
                 ) {
                     if (textEditable) {
                         if (currentMode !== "insert") {
-                            contentState.mode = "insert"
+                            state.mode = "insert"
                         }
                     } else if (currentMode === "insert") {
-                        contentState.mode = "normal"
+                        state.mode = "normal"
                     }
                 } else if (currentMode === "input" && !textEditable) {
-                    contentState.mode = "normal"
+                    state.mode = "normal"
                 }
 
                 // Accumulate key events. The parser will cut this
@@ -138,13 +136,8 @@ function* ParserController() {
                 // unbounded length.
                 keyEvents.push(keyevent)
 
-                const response = parsers[contentState.mode](keyEvents)
-                logger.debug(
-                    currentMode,
-                    contentState.mode,
-                    keyEvents,
-                    response,
-                )
+                const response = parsers[state.mode](keyEvents)
+                logger.debug(currentMode, state.mode, keyEvents, response)
 
                 if (response.isMatch) {
                     keyevent.preventDefault()
@@ -158,14 +151,12 @@ function* ParserController() {
                 } else {
                     keyEvents = response.keys
                     // show current keyEvents as a suffix of the contentState
-                    contentState.suffix = keyEvents
-                        .map(x => PrintableKey(x))
-                        .join("")
-                    logger.debug("suffix: ", contentState.suffix)
+                    state.suffix = keyEvents.map(x => PrintableKey(x)).join("")
+                    logger.debug("suffix: ", state.suffix)
                 }
             }
             controller.acceptExCmd(exstr)
-            contentState.suffix = ""
+            state.suffix = ""
         } catch (e) {
             // Rumsfeldian errors are caught here
             logger.error("An error occurred in the content controller: ", e)
@@ -173,10 +164,33 @@ function* ParserController() {
     }
 }
 
-const generator = ParserController() // var rather than let stops weirdness in repl.
-generator.next()
+export class Controller {
+    accept_cb: (e: KeyboardEvent) => void
+    canceller: KeyCanceller
+    parser: Iterator<void>
 
-/** Feed keys to the ParserController */
-export function acceptKey(keyevent: KeyboardEvent) {
-    return generator.next(keyevent)
+    constructor(state: State) {
+        this.canceller = new KeyCanceller()
+        this.parser = Parser(state, this.canceller)
+        // Advance the generator one for undocumented reasons
+        this.parser.next()
+        this.accept_cb = e => this.parser.next(e)
+    }
+
+    addKeyEventListenersTo(elem) {
+        // First, remove all of our listeners in case we've been
+        // called on the same element twice
+        elem.removeEventListener("keydown", this.accept_cb, true)
+        elem.removeEventListener(
+            "keypress",
+            this.canceller.cancelKeyPress,
+            true,
+        )
+        elem.removeEventListener("keyup", this.canceller.cancelKeyUp, true)
+
+        // Then add them all on.
+        elem.addEventListener("keydown", this.accept_cb, true)
+        elem.addEventListener("keypress", this.canceller.cancelKeyPress, true)
+        elem.addEventListener("keyup", this.canceller.cancelKeyUp, true)
+    }
 }

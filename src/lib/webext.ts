@@ -13,7 +13,7 @@ export function inContentScript() {
     Extension page
     Background page
 */
-export function getContext() {
+export function getContext(): "content" | "background" | "extension" {
     if (!("tabs" in browser)) {
         return "content"
     } else if (
