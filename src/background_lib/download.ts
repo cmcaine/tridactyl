@@ -2,7 +2,7 @@
  * Background download-related functions
  */
 
-import * as Native from "@src/lib/native"
+import Native from "@src/lib/generated/native"
 import { getDownloadFilenameForUrl } from "@src/lib/url_util"
 
 /** Construct an object URL string from a given data URL
@@ -147,13 +147,10 @@ export async function downloadUrlAs(url: string, saveAs: string) {
     })
 }
 
-import * as Messaging from "@src/lib/messaging"
-
-// Get messages from content
-Messaging.addListener(
-    "download_background",
-    Messaging.attributeCaller({
-        downloadUrl,
-        downloadUrlAs,
-    }),
-)
+export async function saveAsExcmd(...filename: string[]) {
+    if (filename.length > 0) {
+        downloadUrlAs(window.location.href, filename.join(" "))
+    } else {
+        downloadUrl(window.location.href, true)
+    }
+}

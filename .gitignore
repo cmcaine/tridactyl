@@ -16,3 +16,4 @@ tags
 compiler/*.js
 compiler/**/*.js
 src/.metadata.generated.ts
+src/lib/.auto_lib_wrapper_names.generated.ts

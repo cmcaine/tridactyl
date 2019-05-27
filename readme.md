@@ -338,7 +338,7 @@ Ask in `#tridactyl` on [matrix.org][matrix-link], freenode, or [gitter][gitter-l
 
 Default keybindings are currently best discovered by reading the [default config](./src/lib/config.ts).
 
-Development notes are in the doc directory, but they're mostly out of date now. Code is quite short and not _too_ badly commented, though.
+Code is not _too_ badly commented, and some higher-level documentation can be found in the doc directory. Some of it is out of date, but [`architecture.md`](doc/architecture.md) and [`writing_an_excmd.md`](doc/writing_an_excmd.md) should still apply.
 
 ## Principles and objectives
 

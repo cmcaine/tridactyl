@@ -1,5 +1,5 @@
 import * as Completions from "@src/completions"
-import * as Native from "@src/lib/native"
+import Native from "@src/lib/generated/native"
 
 class FileSystemCompletionOption extends Completions.CompletionOptionHTML
     implements Completions.CompletionOptionFuse {

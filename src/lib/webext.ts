@@ -3,6 +3,15 @@ import browserProxy from "@src/lib/browser_proxy"
 import * as config from "@src/lib/config"
 import * as UrlUtil from "@src/lib/url_util"
 
+export type Context =
+    | "content"
+    | "background"
+    | "extension"
+
+// I went through the whole list https://developer.mozilla.org/en-US/Firefox/The_about_protocol
+// about:blank is even more special
+export const ABOUT_WHITELIST = ["about:license", "about:logo", "about:rights", "about:blank"]
+
 export function inContentScript() {
     return getContext() === "content"
 }
@@ -13,7 +22,7 @@ export function inContentScript() {
     Extension page
     Background page
 */
-export function getContext() {
+export function getContext(): Context {
     if (!browser.tabs) {
         return "content"
     } else if (

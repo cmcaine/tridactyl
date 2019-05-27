@@ -14,11 +14,10 @@ import { EditorCmds } from "@src/background/editor"
 import * as convert from "@src/lib/convert"
 import * as config from "@src/lib/config"
 import * as dom from "@src/lib/dom"
-import * as download_background from "@src/background/download_background"
 import * as itertools from "@src/lib/itertools"
 import * as keyseq from "@src/lib/keyseq"
 import * as request from "@src/lib/requests"
-import * as native from "@src/lib/native"
+import native from "@src/lib/generated/native"
 import state from "@src/state"
 import * as webext from "@src/lib/webext"
 import { AutoContain } from "@src/lib/autocontainers"
@@ -32,7 +31,6 @@ import * as omnibox from "@src/background/omnibox"
     convert,
     config,
     dom,
-    download_background,
     itertools,
     native,
     keyseq,

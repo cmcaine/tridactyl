@@ -1,4 +1,3 @@
-
 // We have a single dependency on config: getting the value of the WORDPATTERN setting
 // Perhaps we could find a way to get rid of it?
 import * as config from "@src/lib/config"
@@ -256,7 +255,7 @@ export function getWordBoundaries(
     return [boundary1, boundary2 + 1]
 }
 
-/** @hidden
+/**
  * Finds the next word as defined by the wordpattern setting after POSITION. If POSITION is in a word, POSITION is moved forward until it is out of the word.
  * @return number The position of the next word in text or -1 if the next word can't be found.
  */
