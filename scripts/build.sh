@@ -32,8 +32,10 @@ mkdir -p generated/static/clippy
 
 if [ "$(isWindowsMinGW)" = "True" ]; then
   $WIN_PYTHON scripts/excmds_macros.py
+  $WIN_PYTHON scripts/auto_lib.py
 else
   scripts/excmds_macros.py
+  scripts/auto_lib.py
 fi
 
 # .bracketexpr.generated.ts is needed for metadata generation

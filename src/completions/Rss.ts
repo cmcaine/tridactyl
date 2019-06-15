@@ -53,7 +53,7 @@ export class RssCompletionSource extends Completions.CompletionSourceFuse {
 
         if (this.options.length < 1) {
             this.options = (await Messaging.messageOwnTab(
-                "excmd_content",
+                "content_excmds/rss",
                 "getRssLinks",
                 [],
             )).map(link => {
