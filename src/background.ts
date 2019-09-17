@@ -217,3 +217,17 @@ window.tri = Object.assign(window.tri || Object.create(null), {
 omnibox.init()
 
 // }}}
+
+// Disable all other versions of Tridactyl
+browser.management.getSelf().then(extinfo => {
+    browser.management.getAll().then(theminfos => {
+        // Should consider adding Vim Vixen, Surfingkeys, etc to this list
+        const themids = theminfos.map(x => x.id).filter(x => x.match("^tridactyl\.vim.*@cmcaine\.co\.uk") && x !== extinfo.id)
+        for (const themid of themids) {
+            // Neither of these are fully implemented in Firefox
+            // setEnabled would be nicer than uninstall
+            // browser.management.uninstall(themid)
+            browser.management.setEnabled(themid, false)
+        }
+    })
+})
