@@ -3216,9 +3216,22 @@ export function comclear(name: string) {
 
     You can bind to modifiers and special keys by enclosing them with angle brackets, for example `bind <C-\>z fullscreen`, `unbind <F1>` (a favourite of people who use TreeStyleTabs :) ), or `bind <Backspace> forward`.
 
+    You can view all special key names here: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
+
     Modifiers are truncated to a single character, so Ctrl -> C, Alt -> A, and Shift -> S. Shift is a bit special as it is only required if Shift does not change the key inputted, e.g. `<S-ArrowDown>` is OK, but `<S-a>` should just be `A`.
 
-    You can view all special key names here: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
+    Additionally, you can bind explicitly to a keydown or keyup event with the `D` and `U` modifiers respectively. You can make any bind optional by giving it a `?` modifier. Any bind which does not have an explicit `U` or `D` is interpreted as if it is followed by an optional keyup event, unless it is the final key. For example, `gg` becomes `g<?U-g>g`. Explicit keydown events, e.g. `<D-z>`, are not allowed to be the automatic repeat firings you get if you hold the key down.
+
+    An imaginative use of this is a "layer" where holding a key down changes the rest of the bindings:
+
+    ```
+    bind <U-\> --mode=fastscroll mode normal
+    bind <D-\> mode fastscroll
+    bind j --mode=fastscroll scrollpage 1
+    bind k --mode=fastscroll scrollpage -1
+    ```
+
+    With these bindings, holding \ would make j/k scroll further distances.
 
     Use [[composite]] if you want to execute multiple excmds. Use
     [[fillcmdline]] to put a string in the cmdline and focus the cmdline

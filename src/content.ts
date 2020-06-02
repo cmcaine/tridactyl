@@ -48,10 +48,12 @@ import { getAllDocumentFrames } from "@src/lib/dom"
 
 const guardedAcceptKey = (keyevent: KeyboardEvent) => {
     if (!keyevent.isTrusted) return
+    (keyevent as any).keyup = keyevent.type == "keyup"
     ContentController.acceptKey(keyevent)
 }
 function listen(elem) {
     elem.removeEventListener("keydown", guardedAcceptKey, true)
+    elem.removeEventListener("keyup", guardedAcceptKey, true)
     elem.removeEventListener(
         "keypress",
         ContentController.canceller.cancelKeyPress,
@@ -63,6 +65,7 @@ function listen(elem) {
         true,
     )
     elem.addEventListener("keydown", guardedAcceptKey, true)
+    elem.addEventListener("keyup", guardedAcceptKey, true)
     elem.addEventListener(
         "keypress",
         ContentController.canceller.cancelKeyPress,
