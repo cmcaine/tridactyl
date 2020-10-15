@@ -61,6 +61,21 @@ export async function activeTabId() {
     return (await activeTab()).id
 }
 
+/**
+ * Return the active window's id.
+ *
+ */
+export async function activeWindowId() {
+    return (await browserBg.windows.getCurrent()).id
+}
+
+export async function removeActiveWindowValue(value) {
+    browserBg.sessions.removeWindowValue(
+        await activeWindowId(),
+        value,
+    )
+}
+
 export async function activeTabContainerId() {
     return (await activeTab()).cookieStoreId
 }

@@ -173,9 +173,19 @@ export class BufferCompletionSource extends Completions.CompletionSourceFuse {
     }
 
     private async fillOptions() {
-        const tabs: browser.tabs.Tab[] = await browserBg.tabs.query({
-            currentWindow: true,
-        })
+        let tabs: browser.tabs.Tab[]
+
+        if (config.get("tabshowhidden") === "true") {
+            tabs = await browserBg.tabs.query({
+                currentWindow: true
+            })
+        } else {
+            tabs = await browserBg.tabs.query({
+                currentWindow: true,
+                hidden: false
+            })
+        }
+
         const options = []
         // Get alternative tab, defined as last accessed tab.
         tabs.sort((a, b) => b.lastAccessed - a.lastAccessed)

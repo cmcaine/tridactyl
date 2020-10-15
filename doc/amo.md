@@ -59,5 +59,7 @@ Since Tridactyl aims to provide all the features Vimperator and Pentadactyl had,
     -   This allows us to use Firefox's built-in find-in-page API, for, for example, allowing you to bind find-next and find-previous to `n` and `N`.
 -   Monitor extension usage and manage themes:
     -   Tridactyl needs this to integrate with and avoid conflicts with other extensions. For example, Tridactyl's contextual identity features use this to cooperate with the Multi-Account Containers extension.
+-   Hide tabs:
+    -   Tridactyl needs this for tab group commands, which allow associating names with different groups of tabs and showing the tabs from only of those groups at a time.
 
 [betas]: https://tridactyl.cmcaine.co.uk/betas/?sort=time&order=desc

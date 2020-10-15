@@ -164,6 +164,7 @@ import * as Updates from "@src/lib/updates"
 import * as Extensions from "@src/lib/extension_info"
 import * as webrequests from "@src/background/webrequests"
 import * as commandsHelper from "@src/background/commands"
+import { tgroups, tgroupActivate, setTabTgroup, setWindowTgroup, setTgroups, windowTgroup, tgroupClearOldInfo, tgroupLastTabId, tgroupTabs, clearAllTgroupInfo, tgroupActivateLast, tgroupHandleTabActivated, tgroupHandleTabCreated, tgroupHandleTabAttached, tgroupHandleTabUpdated, tgroupHandleTabRemoved, tgroupHandleTabDetached } from "./lib/tab_groups"
 
 ALL_EXCMDS = {
     "": BGSELF,
@@ -2824,7 +2825,208 @@ export async function recontain(containerName: string) {
 }
 
 // }}}
-//
+
+// {{{ TAB GROUPS
+/** @hidden */
+//#background_helper
+// {
+browser.tabs.onCreated.addListener(tgroupHandleTabCreated)
+browser.tabs.onRemoved.addListener(tgroupHandleTabRemoved)
+browser.tabs.onDetached.addListener(tgroupHandleTabDetached)
+browser.tabs.onAttached.addListener(tgroupHandleTabAttached)
+browser.tabs.onActivated.addListener(tgroupHandleTabActivated)
+browser.tabs.onUpdated.addListener(tgroupHandleTabUpdated)
+// }
+
+/** @hidden */
+//#content
+export function setContentStateGroup(name: string) {
+    contentState.group = name
+}
+
+/**
+ * Create a new tab group in the current window.
+ *
+ * Tab groups are a way of organizing different groups of related tabs within a
+ * single window. Groups allow you to have different named contexts and show
+ * only the tabs for a single group at a time.
+ *
+ * @param name The name of the tab group to create.
+ *
+ * If no tab groups exist, set the tab group name for all existing tabs in the
+ * window. Otherwise open a new tab and hide all tabs in the old tab group.
+ *
+ * Tab groups exist only for a single window.
+ *
+ */
+//#background
+export async function tgroupcreate(name: string) {
+    const promises = []
+    const groups = await tgroups()
+
+    if (groups.has(name)) {
+        throw new Error(`Tab group "${name}" already exists`)
+    }
+
+    if (groups.size > 0) {
+        await setWindowTgroup(name)
+        const initialUrl = await config.get("tabgroupnewtaburls")[name]
+        await tabopen(initialUrl)
+        promises.push(tgroupTabs(name, true).then(tabs => browserBg.tabs.hide(tabs.map(tab => tab.id))))
+    } else {
+        promises.push(browser.tabs.query({currentWindow: true}).then((tabs) => {
+            setTabTgroup(name, tabs.map(({ id }) => id))
+            // trigger status line update
+            setContentStateGroup(name)
+        }))
+        promises.push(setWindowTgroup(name))
+    }
+
+    groups.add(name)
+    promises.push(setTgroups(groups))
+    return Promise.all(promises).then(() => name)
+}
+
+/**
+ * Switch to a different tab group, hiding all other tabs.
+ *
+ * @param name The name of the tab group to switch to.
+ *
+ * If the tab group does not exist, act like tgroupcreate.
+ *
+ */
+//#background
+export async function tgroupswitch(name: string) {
+    if (name == await windowTgroup()) {
+        throw new Error(`Already on tab group "${name}"`)
+    }
+
+    const groups = await tgroups()
+    if (groups.size > 0) {
+        if (groups.has(name)) {
+            return tgroupActivate(name).then(() => name)
+        } else {
+            return tgroupcreate(name).then(() => name)
+        }
+    } else {
+        return tgroupcreate(name).then(() => name)
+    }
+}
+
+/**
+ * Switch to the previously active tab group.
+ */
+//#background
+export async function tgrouplast() {
+    if ((await tgroups()).size < 2) {
+        throw new Error("No last tab group")
+    }
+
+    return tgroupActivateLast()
+}
+
+/**
+ * Rename the current tab group.
+ *
+ * @param name The new name of the tab group.
+ *
+ */
+//#background
+export async function tgrouprename(name: string) {
+    if ((await tgroups()).size == 0) {
+        throw new Error("No tab groups exist")
+    }
+
+    return tgroupClearOldInfo(await windowTgroup(), name).then(() => {
+        // trigger status line update
+        setContentStateGroup(name)
+        return name
+    })
+}
+
+/**
+ * Close the current tab group.
+ *
+ * First switch to the previously active tab group. Do nothing if there is only
+ * one tab group.
+ *
+ */
+//#background
+export async function tgroupclose() {
+    const groups = await tgroups()
+    if (groups.size == 0) {
+        throw new Error("No tab groups exist")
+    } else if (groups.size == 1) {
+        throw new Error("This is the only tab group")
+    } else if (groups.size > 1) {
+        const closeGroup = await windowTgroup()
+        const newTabGroup = await tgroupActivateLast()
+        await tgroupTabs(closeGroup).then(tabs => {
+            browser.tabs.remove(tabs.map(tab => tab.id))
+        })
+        return tgroupClearOldInfo(closeGroup).then(() => newTabGroup)
+    }
+}
+
+/**
+ * Move the current tab to another tab group.
+ *
+ * @param name The name of the tab group to move the tab to.
+ *
+ * If this is the last tab in the tab group, also switch to tab group, keeping
+ * the current tab active.
+ *
+ */
+//#background
+export async function tgroupmove(name: string) {
+    const groups = await tgroups()
+    const currentGroup = await windowTgroup()
+
+    if (groups.size == 0) {
+        throw new Error("No tab groups exist")
+    }
+    if (!groups.has(name)) {
+        throw new Error(`Tab group "${name}" does not exist`)
+    }
+    if (name == currentGroup) {
+        throw new Error(`Tab is already on group "${name}"`)
+    }
+
+    const tabCount = await tgroupTabs(currentGroup).then(tabs => tabs.length)
+
+    await setTabTgroup(name)
+    const currentTabId = await activeTabId()
+
+    // switch to other group if this is the last tab in the current group
+    if (tabCount == 1) {
+        return Promise.all([
+            tgroupClearOldInfo(currentGroup, name),
+            tgroupTabs(name).then(tabs => {
+                browserBg.tabs.show(tabs.map(tab => tab.id))
+            }),
+        ]).then(() => name)
+    } else {
+        const lastTabId = await tgroupLastTabId(currentGroup)
+        await tabSetActive(lastTabId)
+        return browser.tabs.hide(currentTabId).then(() => currentGroup)
+    }
+}
+
+/**
+ * Delete all tab group information for the current window and show all tabs.
+ *
+ */
+//#background
+export async function tgroupabort() {
+    if ((await tgroups()).size == 0) {
+        throw new Error("No tab groups exist")
+    }
+
+    return clearAllTgroupInfo().then(() => undefined)
+}
+
+// }}}
+
 // {{{ MISC
 
 //#background

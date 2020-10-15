@@ -155,6 +155,7 @@ import * as urlutils from "@src/lib/url_util"
 import * as scrolling from "@src/content/scrolling"
 import * as R from "ramda"
 import * as visual from "@src/lib/visual"
+import { tabTgroup } from "./lib/tab_groups"
 /* tslint:disable:import-spacing */
 ;(window as any).tri = Object.assign(Object.create(null), {
     browserBg: webext.browserBg,
@@ -295,16 +296,18 @@ config.getAsync("modeindicator").then(mode => {
         })
     }
 
-    addContentStateChangedListener((property, oldMode, oldValue, newValue) => {
+    addContentStateChangedListener(async (property, oldMode, oldValue, newValue) => {
         let mode = newValue
+        let group = ""
         let suffix = ""
         let result = ""
         if (property !== "mode") {
             if (property === "suffix") {
                 mode = oldMode
                 suffix = newValue
-            } else {
-                return
+            } else if (property === "group") {
+                mode = oldMode
+                group = newValue
             }
         }
 
@@ -330,10 +333,17 @@ config.getAsync("modeindicator").then(mode => {
         } else {
             result = mode
         }
+
         const modeindicatorshowkeys = Config.get("modeindicatorshowkeys")
         if (modeindicatorshowkeys === "true" && suffix !== "") {
             result = mode + " " + suffix
         }
+
+        const tabGroup = await tabTgroup()
+        if (tabGroup) {
+            result = result + " | " + tabGroup
+        }
+
         logger.debug(
             "statusindicator: ",
             result,

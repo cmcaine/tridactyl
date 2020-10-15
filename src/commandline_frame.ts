@@ -122,6 +122,7 @@ export function enableCompletions() {
             RssCompletionSource,
             SessionsCompletionSource,
             SettingsCompletionSource,
+            TabGroupCompletionSource,
             WindowCompletionSource,
             ExtensionsCompletionSource,
         ]
@@ -392,6 +393,7 @@ Messaging.addListener("commandline_frame", Messaging.attributeCaller(SELF))
 
 import { getCommandlineFns } from "@src/lib/commandline_cmds"
 import { KeyEventLike } from "./lib/keyseq"
+import { TabGroupCompletionSource } from "./completions/TabGroup"
 commandline_state.fns = getCommandlineFns(commandline_state)
 Messaging.addListener(
     "commandline_cmd",

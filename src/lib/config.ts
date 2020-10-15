@@ -543,6 +543,13 @@ export class default_config {
         o: "open",
         w: "winopen",
         t: "tabopen",
+        tabgroupabort: "tgroupabort",
+        tabgroupclose: "tgroupclose",
+        tabgroupcreate: "tgroupcreate",
+        tabgrouplast: "tgrouplast",
+        tabgroupmove: "tgroupmove",
+        tabgrouprename: "tgrouprename",
+        tabgroupswitch: "tgroupswitch",
         tabnew: "tabopen",
         tabm: "tabmove",
         tabo: "tabonly",
@@ -970,6 +977,16 @@ export class default_config {
      * Autocontain directives create a container if it doesn't exist already.
      */
     auconcreatecontainer: "true" | "false" = "true"
+
+    /**
+     * Initial urls to navigate to when creating a new tab for a new tab group.
+     */
+    tabgroupnewtaburls = {}
+
+    /**
+     * Whether :tab shows completions for hidden tabs (e.g. tabs in other tab groups).
+     */
+    tabshowhidden: "true" | "false" = "false"
 
     /**
      * Number of most recent results to ask Firefox for. We display the top 20 or so most frequently visited ones.
