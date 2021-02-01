@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Vimperator/Pentadactyl successor",
   "dependencies": {
+    "@mozilla/readability": "^0.4.1",
     "@types/css": "0.0.31",
     "@types/nearley": "^2.11.1",
     "command-line-args": "^5.1.1",

@@ -5097,6 +5097,15 @@ export async function extoptions(...optionNameArgs: string[]) {
     return winopen("-popup", selectedExtension.optionsUrl)
 }
 
+//#content_helper
+import { Readability } from "@mozilla/readability"
+
+//#content
+export async function reader2() {
+    const article = new Readability(document).parse()
+    document.body.innerHTML = article.content
+}
+
 /**
  * Restore the most recently hidden element. Repeated invocations restore the next-most-recently-hidden element.
  *
