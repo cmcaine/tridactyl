@@ -23,17 +23,33 @@ class BufferCompletionOption
         this.tabIndex = tab.index
         this.tabId = tab.id
 
-        // Two character tab properties prefix
-        let pre = ""
-        if (tab.active) pre += "%"
+        // pre contains max four uppercase characters for tab status.
+        // If statusstylepretty is set to true replace use unicode characters,
+        // but keep plain letters in hidden column for completion.
+        let preplain = ""
+        if (tab.active) preplain += "%"
         else if (isAlternative) {
-            pre += "#"
+            preplain += "#"
             this.value = "#"
         }
-        if (tab.pinned) pre += "@"
+        let pre = preplain
+        if (tab.pinned) preplain += "P"
+        if (tab.audible) preplain += "A"
+        if (tab.mutedInfo.muted) preplain += "M"
+        if (tab.discarded) preplain += "D"
+
+        if (config.get("completions", "Tab", "statusstylepretty") === "true") {
+            if (tab.pinned) pre += "\uD83D\uDCCC"
+            if (tab.audible) pre += "\uD83D\uDD0A"
+            if (tab.mutedInfo.muted) pre += "\uD83D\uDD07"
+            if (tab.discarded) pre += "\u2296"
+        } else {
+            pre = preplain
+        }
 
         // Push prefix before padding so we don't match on whitespace
         this.fuseKeys.push(pre)
+        this.fuseKeys.push(preplain)
 
         // Push properties we want to fuzmatch on
         this.fuseKeys.push(String(tab.index + 1), tab.title, tab.url)
@@ -46,7 +62,8 @@ class BufferCompletionOption
         this.html = html`<tr
             class="BufferCompletionOption option container_${container.color} container_${container.icon} container_${container.name}"
         >
-            <td class="prefix">${pre.padEnd(2)}</td>
+            <td class="prefix">${pre}</td>
+            <td class="prefixplain" hidden>${preplain}</td>
             <td class="container"></td>
             <td class="icon"><img loading="lazy" src="${favIconUrl}" /></td>
             <td class="title">${tab.index + 1}: ${indicator} ${tab.title}</td>

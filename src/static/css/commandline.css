@@ -70,7 +70,7 @@ input:focus {
 }
 
 #completions table tr td.prefix {
-    width: 1em;
+    width: 3.2em;
     padding-left: 0.5em;
     text-align: center;
 }

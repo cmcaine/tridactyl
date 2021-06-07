@@ -14,7 +14,7 @@ Tridactyl uses a similar notation to Vim for keys with modifiers: `<C-x>` means 
 
 ## Useful normal mode keybinds
 
--   `b` brings up a list of your current tabs. Press `Tab`/`Shift-Tab` to cycle through them and enter to select. You can also type to filter down the tabs based on their titles and URLs
+-   `b` brings up a list of your current tabs. Press `Tab`/`Shift-Tab` to cycle through them and enter to select. You can also type to filter down the tabs based on their titles, URLs or status (pinned, audible, muted, or discarded)
 -   Opening web pages:
     -   `w` opens URLs in new windows
     -   `o` in the current tab
