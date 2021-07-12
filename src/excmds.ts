@@ -4172,9 +4172,23 @@ export async function sanitise(...args: string[]) {
     // Tridactyl-specific items
     if (dts.commandline === true) state.cmdHistory = []
     delete dts.commandline
-    if (dts.tridactyllocal === true) await browser.storage.local.clear()
+    async function clearStorageWithSanePromise(areaName: "local" | "sync") {
+        let resolveStorageDone
+        const storageDonePromise = new Promise(resolver => resolveStorageDone = resolver)
+        const listener = (changes, changedAreaName) => changedAreaName == areaName && resolveStorageDone()
+        browser.storage.onChanged.addListener(listener)
+
+        // storage.x.set/clear can return before the storage has been cleared, even if awaited
+        // (which is why this function exists)
+        // see https://bugzilla.mozilla.org/show_bug.cgi?id=1554088
+        browser.storage[areaName].clear()
+
+        await storageDonePromise
+        return browser.storage.onChanged.removeListener(listener)
+    }
+    if (dts.tridactyllocal === true) await clearStorageWithSanePromise("local")
     delete dts.tridactyllocal
-    if (dts.tridactylsync === true) await browser.storage.sync.clear()
+    if (dts.tridactylsync === true) await clearStorageWithSanePromise("sync")
     delete dts.tridactylsync
     // Global items
     return browser.browsingData.remove(since, dts)
