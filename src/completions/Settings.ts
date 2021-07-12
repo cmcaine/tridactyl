@@ -29,6 +29,7 @@ export class SettingsCompletionSource extends Completions.CompletionSourceFuse {
             ["set", "get", "unset", "seturl", "unseturl", "viewconfig"],
             "SettingsCompletionSource",
             "Settings",
+            "Settings",
         )
 
         this._parent.appendChild(this.node)

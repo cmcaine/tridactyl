@@ -21,7 +21,7 @@ export class ThemeCompletionSource extends Completions.CompletionSourceFuse {
     public options: ThemeCompletionOption[]
 
     constructor(private _parent) {
-        super(["set theme", "colourscheme"], "ThemeCompletionSource", "Themes")
+        super(["set theme", "colourscheme"], "ThemeCompletionSource", "Themes", "Theme")
 
         this.updateOptions()
         this._parent.appendChild(this.node)
@@ -34,10 +34,6 @@ export class ThemeCompletionSource extends Completions.CompletionSourceFuse {
 
     async onInput(exstr) {
         return this.updateOptions(exstr)
-    }
-
-    setStateFromScore(scoredOpts: Completions.ScoredOption[]) {
-        super.setStateFromScore(scoredOpts, false)
     }
 
     private async updateOptions(exstr = "") {

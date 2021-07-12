@@ -27,6 +27,7 @@ export class BindingsCompletionSource extends Completions.CompletionSourceFuse {
             ["bind", "unbind", "bindurl", "unbindurl", "reset", "reseturl"],
             "BindingsCompletionSource",
             "Bindings",
+            "Bindings",
         )
 
         this._parent.appendChild(this.node)

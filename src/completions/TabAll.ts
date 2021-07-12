@@ -45,25 +45,19 @@ class TabAllCompletionOption
 
 export class TabAllCompletionSource extends Completions.CompletionSourceFuse {
     public options: TabAllCompletionOption[]
-    private shouldSetStateFromScore = true
+    
 
     constructor(private _parent) {
-        super(["taball", "tabgrab"], "TabAllCompletionSource", "All Tabs")
+        super(["taball", "tabgrab"], "TabAllCompletionSource", "All Tabs", "TabAll")
 
         this.updateOptions()
         this._parent.appendChild(this.node)
-        this.shouldSetStateFromScore =
-            config.get("completions", "TabAll", "autoselect") === "true"
 
         Messaging.addListener("tab_changes", () => this.reactToTabChanges())
     }
 
     async onInput(exstr) {
         return this.updateOptions(exstr)
-    }
-
-    setStateFromScore(scoredOpts: Completions.ScoredOption[]) {
-        super.setStateFromScore(scoredOpts, this.shouldSetStateFromScore)
     }
 
     /**

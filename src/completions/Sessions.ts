@@ -67,23 +67,17 @@ class SessionCompletionOption
 
 export class SessionsCompletionSource extends Completions.CompletionSourceFuse {
     public options: SessionCompletionOption[]
-    private shouldSetStateFromScore = true
+    
 
     constructor(private _parent) {
-        super(["undo"], "SessionCompletionSource", "sessions")
+        super(["undo"], "SessionCompletionSource", "sessions", "Sessions")
 
         this.updateOptions()
-        this.shouldSetStateFromScore =
-            config.get("completions", "Sessions", "autoselect") === "true"
         this._parent.appendChild(this.node)
     }
 
     async onInput(exstr) {
         return this.updateOptions(exstr)
-    }
-
-    setStateFromScore(scoredOpts: Completions.ScoredOption[]) {
-        super.setStateFromScore(scoredOpts, this.shouldSetStateFromScore)
     }
 
     private async updateOptions(exstr = "") {

@@ -22,7 +22,7 @@ export class ExcmdCompletionSource extends Completions.CompletionSourceFuse {
     public options: ExcmdCompletionOption[]
 
     constructor(private _parent) {
-        super([], "ExcmdCompletionSource", "ex commands")
+        super([], "ExcmdCompletionSource", "ex commands", "Excmd")
 
         this.updateOptions()
         this._parent.appendChild(this.node)
@@ -49,10 +49,6 @@ export class ExcmdCompletionSource extends Completions.CompletionSourceFuse {
         this.completion = option.value
         option.state = "focused"
         this.lastFocused = option
-    }
-
-    setStateFromScore(scoredOpts: Completions.ScoredOption[]) {
-        super.setStateFromScore(scoredOpts, false)
     }
 
     private async updateOptions(exstr = "") {

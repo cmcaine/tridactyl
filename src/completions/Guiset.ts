@@ -19,7 +19,7 @@ export class GuisetCompletionSource extends Completions.CompletionSourceFuse {
     public options: GuisetCompletionOption[]
 
     constructor(private _parent) {
-        super(["guiset", "guiset_quiet"], "GuisetCompletionSource", "Guiset")
+        super(["guiset", "guiset_quiet"], "GuisetCompletionSource", "Guiset", "Guiset")
 
         this._parent.appendChild(this.node)
     }

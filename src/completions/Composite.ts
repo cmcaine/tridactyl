@@ -12,7 +12,7 @@ export class CompositeCompletionSource extends Completions.CompletionSourceFuse 
     public options: ExcmdCompletions.ExcmdCompletionOption[]
 
     constructor(private _parent) {
-        super([PREFIX], "CompositeCompletionSource", "ex commands")
+        super([PREFIX], "CompositeCompletionSource", "ex commands", "Composite")
 
         this.updateOptions()
         this._parent.appendChild(this.node)
@@ -43,10 +43,6 @@ export class CompositeCompletionSource extends Completions.CompletionSourceFuse 
             ) + option.value
         option.state = "focused"
         this.lastFocused = option
-    }
-
-    setStateFromScore(scoredOpts: Completions.ScoredOption[]) {
-        super.setStateFromScore(scoredOpts, false)
     }
 
     private async updateOptions(exstr = "") {

@@ -1036,8 +1036,50 @@ export class default_config {
         Bmark: {
             autoselect: "true",
         },
+        Help: {
+            autoselect: "false",
+        },
+        Composite: {
+            autoselect: "false",
+        },
+        Excmd: {
+            autoselect: "false",
+        },
+        Theme: {
+            autoselect: "false",
+        },
         Sessions: {
-            autoselect: "true",
+            autoselect: "false",
+        },
+        Window: {
+            autoselect: "false",
+        },
+        Settings: {
+            autoselect: "false",
+        },
+        Preferences: {
+            autoselect: "false",
+        },
+        History: {
+            autoselect: "false",
+        },
+        Guiset: {
+            autoselect: "false",
+        },
+        Find: {
+            autoselect: "false",
+        },
+        FileSystem: {
+            autoselect: "false",
+        },
+        Extensions: {
+            autoselect: "false",
+        },
+        Bindings: {
+            autoselect: "false",
+        },
+        Apropos: {
+            autoselect: "false",
         },
     }
 

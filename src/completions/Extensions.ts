@@ -19,7 +19,7 @@ export class ExtensionsCompletionSource extends Completions.CompletionSourceFuse
     public options: ExtensionsCompletionOption[]
 
     constructor(private _parent) {
-        super(["extoptions"], "ExtensionsCompletionSource", "Extension options")
+        super(["extoptions"], "ExtensionsCompletionSource", "Extension options", "Extensions")
 
         this._parent.appendChild(this.node)
     }

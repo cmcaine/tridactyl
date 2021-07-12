@@ -22,6 +22,7 @@ export class FileSystemCompletionSource extends Completions.CompletionSourceFuse
             ["saveas", "source", "js -s", "jsb -s"],
             "FileSystemCompletionSource",
             "FileSystem",
+            "FileSystem",
         )
 
         this._parent.appendChild(this.node)

@@ -33,15 +33,13 @@ class BmarkCompletionOption
 
 export class BmarkCompletionSource extends Completions.CompletionSourceFuse {
     public options: BmarkCompletionOption[]
-    private shouldSetStateFromScore = true
+    
 
     constructor(private _parent) {
-        super(["bmarks"], "BmarkCompletionSource", "Bookmarks")
+        super(["bmarks"], "BmarkCompletionSource", "Bookmarks", "Bmark")
 
         this._parent.appendChild(this.node)
         this.sortScoredOptions = true
-        this.shouldSetStateFromScore =
-            config.get("completions", "Bmark", "autoselect") === "true"
     }
 
     public async filter(exstr: string) {
@@ -78,10 +76,6 @@ export class BmarkCompletionSource extends Completions.CompletionSourceFuse {
 
         this.lastExstr = prefix + query
         return this.updateChain()
-    }
-
-    setStateFromScore(scoredOpts: Completions.ScoredOption[]) {
-        super.setStateFromScore(scoredOpts, this.shouldSetStateFromScore)
     }
 
     updateChain() {

@@ -19,7 +19,7 @@ export class PreferenceCompletionSource extends Completions.CompletionSourceFuse
     public options: PreferenceCompletionOption[]
 
     constructor(private _parent) {
-        super(["setpref"], "PreferenceCompletionSource", "Preference")
+        super(["setpref"], "PreferenceCompletionSource", "Preference", "Preference")
 
         this._parent.appendChild(this.node)
     }

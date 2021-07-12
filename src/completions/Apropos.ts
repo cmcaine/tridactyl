@@ -21,7 +21,7 @@ export class AproposCompletionSource extends Completions.CompletionSourceFuse {
     public options: AproposCompletionOption[]
 
     constructor(private _parent) {
-        super(["apropos"], "AproposCompletionSource", "Apropos")
+        super(["apropos"], "AproposCompletionSource", "Apropos", "Apropos")
 
         this._parent.appendChild(this.node)
     }

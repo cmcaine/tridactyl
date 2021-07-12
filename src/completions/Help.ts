@@ -21,7 +21,7 @@ export class HelpCompletionSource extends Completions.CompletionSourceFuse {
     public options: HelpCompletionOption[]
 
     constructor(private _parent) {
-        super(["help"], "HelpCompletionSource", "Help")
+        super(["help"], "HelpCompletionSource", "Help", "Help")
 
         this._parent.appendChild(this.node)
     }

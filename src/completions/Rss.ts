@@ -25,19 +25,13 @@ class RssCompletionOption
 
 export class RssCompletionSource extends Completions.CompletionSourceFuse {
     public options: RssCompletionOption[] = []
-    private shouldSetStateFromScore = true
+    
 
     constructor(private _parent) {
-        super(["rssexec"], "RssCompletionSource", "Feeds")
+        super(["rssexec"], "RssCompletionSource", "Feeds", "Rss")
 
         this.updateOptions()
-        this.shouldSetStateFromScore =
-            config.get("completions", "Rss", "autoselect") === "true"
         this._parent.appendChild(this.node)
-    }
-
-    setStateFromScore(scoredOpts: Completions.ScoredOption[]) {
-        super.setStateFromScore(scoredOpts, this.shouldSetStateFromScore)
     }
 
     onInput(...whatever) {
