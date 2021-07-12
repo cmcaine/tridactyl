@@ -5166,6 +5166,15 @@ export async function keyfeed(mapstr: string) {
     }
 }
 
+//#content
+export async function keyfake(mapstr: string) {
+    const keyseq = mapstrToKeyseq(mapstr)
+    for (const k of keyseq) {
+        window.dispatchEvent(new KeyboardEvent("keydown", k))
+        await sleep(10)
+    }
+}
+
 /**  Open a welcome page on first install.
  *
  * @hidden
