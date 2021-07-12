@@ -59,8 +59,8 @@ if [ "$QUICK_BUILD" != "1" ]; then
 
     # It's important to generate the metadata before the documentation because
     # missing imports might break documentation generation on clean builds
-    "$(yarn bin)/tsc" compiler/gen_metadata.ts -m commonjs --target es2017 \
-      && node compiler/gen_metadata.js \
+    "$(yarn bin)/esbuild" --target=node10 --platform=node --bundle compiler/gen_metadata.ts > compiler/gen_metadata.js \
+    && node compiler/gen_metadata.js \
               --out src/.metadata.generated.ts \
               --themeDir src/static/themes \
               src/excmds.ts src/lib/config.ts

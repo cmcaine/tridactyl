@@ -1,6 +1,6 @@
 import * as ts from "typescript"
 import * as fs from "fs"
-import * as commandLineArgs from "command-line-args"
+import commandLineArgs from "command-line-args"
 import * as AllTypes from "./types/AllTypes"
 import * as AllMetadata from "./metadata/AllMetadata"
 
