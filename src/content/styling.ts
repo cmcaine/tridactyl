@@ -48,46 +48,49 @@ export async function theme(element) {
         insertedCSS = false
     }
 
-    const newTheme = await config.getAsync("theme")
+    const newThemes = await config.getAsync("themes")
+    if (newThemes.length == 0) newThemes.push(await config.getAsync("theme"))
 
-    /**
-     * DEPRECATED
-     *
-     * You don't need to add weird classnames to your themes any more, but you can if you want.
-     *
-     * Retained for backwards compatibility.
-     **/
-    if (newTheme !== "default") {
-        element.classList.add(prefixTheme(newTheme))
-    }
-    // DEPRECATION ENDS
-
-    // Insert custom css if needed
-    if (newTheme !== "default") {
-        customCss.code = THEMES.includes(newTheme)
-            ? "@import url('" +
-              browser.runtime.getURL(
-                  "static/themes/" + newTheme + "/" + newTheme + ".css",
-              ) +
-              "');"
-            : await config.getAsync("customthemes", newTheme)
-        if (customCss.code) {
-            await browserBg.tabs.insertCSS(await ownTabId(), customCss)
-            insertedCSS = true
-        } else {
-            logger.error("Theme " + newTheme + " couldn't be found.")
+    for (const newTheme of newThemes) {
+        /**
+         * DEPRECATED
+         *
+         * You don't need to add weird classnames to your themes any more, but you can if you want.
+         *
+         * Retained for backwards compatibility.
+         **/
+        if (newTheme !== "default") {
+            element.classList.add(prefixTheme(newTheme))
         }
-    }
+        // DEPRECATION ENDS
 
-    // Record for re-theming
-    // considering only elements :root (page and cmdline_iframe)
-    // TODO:
-    //     - Find ways to check if element is already pushed
-    if (
-        THEMED_ELEMENTS.length < 2 &&
-        element.tagName.toUpperCase() === "HTML"
-    ) {
-        THEMED_ELEMENTS.push(element)
+        // Insert custom css if needed
+        if (newTheme !== "default") {
+            customCss.code = THEMES.includes(newTheme)
+                ? "@import url('" +
+                  browser.runtime.getURL(
+                      "static/themes/" + newTheme + "/" + newTheme + ".css",
+                  ) +
+                  "');"
+                : await config.getAsync("customthemes", newTheme)
+            if (customCss.code) {
+                await browserBg.tabs.insertCSS(await ownTabId(), customCss)
+                insertedCSS = true
+            } else {
+                logger.error("Theme " + newTheme + " couldn't be found.")
+            }
+        }
+
+        // Record for re-theming
+        // considering only elements :root (page and cmdline_iframe)
+        // TODO:
+        //     - Find ways to check if element is already pushed
+        if (
+            THEMED_ELEMENTS.length < 2 &&
+            element.tagName.toUpperCase() === "HTML"
+        ) {
+            THEMED_ELEMENTS.push(element)
+        }
     }
 }
 
