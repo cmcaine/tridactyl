@@ -852,7 +852,7 @@ export class default_config {
     /**
      * Logging levels. Unless you're debugging Tridactyl, it's unlikely you'll ever need to change these.
      */
-    logging: { [key: string]: LoggingLevel } = {
+    logging = {
         cmdline: "warning",
         containers: "warning",
         controller: "warning",

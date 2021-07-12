@@ -11,6 +11,9 @@ LevelToNum.set("warning", 2)
 LevelToNum.set("info", 3)
 LevelToNum.set("debug", 4)
 
+// I'm sure I shouldn't have to generate this
+const dummy = new Config.default_config()
+
 export class Logger {
     /**
      * Config-aware Logger class.
@@ -18,7 +21,7 @@ export class Logger {
      * @param logModule     the logging module name: this is ued to look up the
      *                      configured/default level in the user config
      */
-    constructor(private logModule) {}
+    constructor(private logModule: keyof typeof dummy.logging) {}
 
     /**
      * Config-aware logging function.
