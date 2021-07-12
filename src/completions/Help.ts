@@ -2,8 +2,10 @@ import * as Completions from "@src/completions"
 import * as Metadata from "@src/.metadata.generated"
 import * as aliases from "@src/lib/aliases"
 import * as config from "@src/lib/config"
+import { mode2maps } from "@src/lib/binding"
 
-class HelpCompletionOption extends Completions.CompletionOptionHTML
+class HelpCompletionOption
+    extends Completions.CompletionOptionHTML
     implements Completions.CompletionOptionFuse {
     public fuseKeys = []
 
@@ -48,11 +50,39 @@ export class HelpCompletionSource extends Completions.CompletionSourceFuse {
         const fns = excmds.getFunctions()
         const settings = config.get()
         const exaliases = settings.exaliases
-        const bindings = settings.nmaps
+        const allbindings = {}
+        for (const [key, value] of mode2maps.entries()) {
+            allbindings[key] = settings[value]
+        }
+
+        function query2bindcompletions(options, query) {
+            const modenames = Object.keys(allbindings)
+            const completions = []
+            for (const modename of modenames) {
+                const binds = Object.keys(
+                    allbindings[modename],
+                ).filter(binding => binding.startsWith(query))
+                for (const binding of binds) {
+                    completions.push(
+                        new HelpCompletionOption(
+                            binding,
+                            `${
+                                modename[0].toUpperCase() + modename.slice(1)
+                            } mode binding for \`${
+                                allbindings[modename][binding]
+                            }\``,
+                            "-b",
+                        ),
+                    )
+                }
+            }
+            return completions
+        }
+
         if (
             fns === undefined ||
             exaliases === undefined ||
-            bindings === undefined
+            settings.nmaps === undefined
         ) {
             return
         }
@@ -75,18 +105,7 @@ export class HelpCompletionSource extends Completions.CompletionSourceFuse {
                         }),
                 ),
             "-b": (options, query) =>
-                options.concat(
-                    Object.keys(bindings)
-                        .filter(binding => binding.startsWith(query))
-                        .map(
-                            binding =>
-                                new HelpCompletionOption(
-                                    binding,
-                                    `Normal mode binding for \`${bindings[binding]}\``,
-                                    "-b",
-                                ),
-                        ),
-                ),
+                options.concat(query2bindcompletions(options, query)),
             "-e": (options, query) =>
                 options.concat(
                     fns
