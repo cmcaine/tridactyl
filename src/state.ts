@@ -20,6 +20,10 @@ const logger = new Logger("state")
 class State {
     lastSearchQuery: string = undefined
     cmdHistory: string[] = []
+    // How should this work?
+    // - if I jump to a prevInput, then I leave that input and stay on that tab, then invoke the command again, jump to the previous prevInput
+    // - if I'm on a different tab, jump to the same prevInput <!-- don't bother doing this yet -->
+        // - unless a new one has been activated, then jump to that
     prevInputs: Array<{ inputId: string; tab: number; jumppos?: number }> = [
         {
             inputId: undefined,
@@ -27,6 +31,8 @@ class State {
             jumppos: undefined,
         },
     ]
+    // For some reason `: boolean` doesn't work here
+    storeNextInput: "true" | "false" = "true"
     last_ex_str = "echo"
 }
 

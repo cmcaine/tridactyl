@@ -2217,6 +2217,7 @@ export async function changelistjump() {
     const tail = state.prevInputs[state.prevInputs.length - 1]
     const jumppos = tail.jumppos ? tail.jumppos : state.prevInputs.length - 1
     const input = state.prevInputs[jumppos]
+    state.storeNextInput = "false"
     await browser.tabs.update(input.tab, { active: true })
     const id = input.inputId
     // Not all elements have an ID, so this will do for now.

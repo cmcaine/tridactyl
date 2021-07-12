@@ -542,11 +542,15 @@ function onPageFocus(elem: HTMLElement): boolean {
 
 async function setInput(el) {
     const tab = await activeTabId()
-    // store maximum of 10 elements to stop this getting bonkers huge
+    if ((await State.getAsync("storeNextInput")) === "false") {
+        state.storeNextInput = "true"
+        return
+    }
     const arr = (await State.getAsync("prevInputs")).concat({
         tab,
         inputId: el.id,
     })
+    // store maximum of 10 elements to stop this getting bonkers huge
     state.prevInputs = arr.slice(Math.max(arr.length - 10, 0))
 }
 
