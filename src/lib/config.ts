@@ -765,6 +765,11 @@ export class default_config {
     scrollduration = 100
 
     /**
+     * Whether scrolling should change elements automatically once the bottom is reached
+     */
+    scrollswitch: "manual" | "auto" = "auto"
+
+    /**
      * Where to open tabs opened with `tabopen` - to the right of the current tab, or at the end of the tabs.
      */
     tabopenpos: "next" | "last" | "related" = "next"

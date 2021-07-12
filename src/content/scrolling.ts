@@ -186,6 +186,15 @@ export async function recursiveScroll(
         const sameSignX = xDistance < 0 === lastX < 0
         const sameSignY = yDistance < 0 === lastY < 0
         const sameElement = lastFocused == currentFocused
+        if (
+            lastRecursiveScrolled &&
+            config.get("scrollswitch") === "manual" &&
+            ((currentFocused && currentFocused == lastRecursiveScrolled) ||
+                !currentFocused)
+        ) {
+            scroll(xDistance, yDistance, lastRecursiveScrolled)
+            return true
+        }
         if (lastRecursiveScrolled && sameSignX && sameSignY && sameElement) {
             // We're scrolling in the same direction as the previous time so
             // let's try to pick up from where we left
