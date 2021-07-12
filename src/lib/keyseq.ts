@@ -121,16 +121,10 @@ function splitNumericPrefix(
     keyseq: KeyEventLike[],
 ): [KeyEventLike[], KeyEventLike[]] {
     // If the first key is in 1:9, partition all numbers until you reach a non-number.
-    if (
-        !hasModifiers(keyseq[0]) &&
-        [1, 2, 3, 4, 5, 6, 7, 8, 9].includes(Number(keyseq[0].key))
-    ) {
+    if ([1, 2, 3, 4, 5, 6, 7, 8, 9].includes(Number(keyseq[0].key))) {
         const prefix = [keyseq[0]]
         for (const ke of keyseq.slice(1)) {
-            if (
-                !hasModifiers(ke) &&
-                [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].includes(Number(ke.key))
-            )
+            if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9].includes(Number(ke.key)))
                 prefix.push(ke)
             else break
         }

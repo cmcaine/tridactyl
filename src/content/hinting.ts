@@ -1206,16 +1206,14 @@ export function parser(keys: keyseq.KeyEventLike[]) {
     if (parsed.isMatch === true) {
         return parsed
     }
-    // Ignore modifiers since they can't match text
-    const simplekeys = keys.filter(key => !keyseq.hasModifiers(key))
     let exstr
-    if (simplekeys.length > 1) {
-        exstr = simplekeys.reduce(
+    if (keys.length > 1) {
+        exstr = keys.reduce(
             (acc, key) => `hint.pushKey ${key.key};`,
             "composite ",
         )
-    } else if (simplekeys.length === 1) {
-        exstr = `hint.pushKeyCodePoint ${simplekeys[0].key.codePointAt(0)}`
+    } else if (keys.length === 1) {
+        exstr = `hint.pushKeyCodePoint ${keys[0].key.codePointAt(0)}`
     } else {
         return { keys: [], isMatch: false }
     }
