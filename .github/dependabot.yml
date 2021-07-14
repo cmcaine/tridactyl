@@ -1,0 +1,96 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: "@types/node"
+    versions:
+    - 15.0.0
+  - dependency-name: esbuild
+    versions:
+    - 0.11.10
+    - 0.11.11
+    - 0.11.12
+    - 0.11.13
+    - 0.11.14
+    - 0.11.15
+    - 0.11.8
+    - 0.11.9
+  - dependency-name: ts-loader
+    versions:
+    - 9.0.0
+    - 9.0.2
+    - 9.1.0
+  - dependency-name: eslint-plugin-sonarjs
+    versions:
+    - 0.6.0
+  - dependency-name: webpack
+    versions:
+    - 5.20.0
+    - 5.34.0
+  - dependency-name: selenium-webdriver
+    versions:
+    - 4.0.0-beta.2
+  - dependency-name: typedoc
+    versions:
+    - 0.20.19
+    - 0.20.20
+    - 0.20.21
+    - 0.20.22
+    - 0.20.23
+    - 0.20.24
+    - 0.20.25
+    - 0.20.26
+    - 0.20.27
+    - 0.20.28
+    - 0.20.29
+    - 0.20.30
+    - 0.20.31
+    - 0.20.32
+    - 0.20.33
+    - 0.20.34
+    - 0.20.35
+  - dependency-name: "@types/ramda"
+    versions:
+    - 0.27.38
+    - 0.27.39
+  - dependency-name: "@typescript-eslint/eslint-plugin-tslint"
+    versions:
+    - 4.16.0
+    - 4.20.0
+  - dependency-name: "@typescript-eslint/eslint-plugin"
+    versions:
+    - 4.16.0
+    - 4.20.0
+  - dependency-name: "@typescript-eslint/parser"
+    versions:
+    - 4.15.1
+    - 4.15.2
+    - 4.16.0
+    - 4.20.0
+  - dependency-name: typedoc-default-themes
+    versions:
+    - 0.12.6
+    - 0.12.7
+    - 0.12.8
+    - 0.12.9
+  - dependency-name: tsconfig-paths-webpack-plugin
+    versions:
+    - 3.4.0
+  - dependency-name: typescript
+    versions:
+    - 4.2.3
+  - dependency-name: eslint-plugin-jsdoc
+    versions:
+    - 32.0.0
+    - 32.0.1
+    - 32.0.2
+    - 32.0.3
+    - 32.1.0
+    - 32.1.1
+  - dependency-name: eslint-config-prettier
+    versions:
+    - 8.0.0
