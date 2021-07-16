@@ -2,6 +2,7 @@ import * as config from "@src/lib/config"
 import state from "@src/state"
 import * as State from "@src/state"
 import * as Logging from "@src/lib/logging"
+import { contentState } from "@src/content/state_content"
 import {
     activeTabId,
     openInNewTab,
@@ -537,7 +538,8 @@ function onPageFocus(elem: HTMLElement): boolean {
     if (isTextEditable(elem)) {
         LAST_USED_INPUT = elem
     }
-    return config.get("allowautofocus") === "true"
+    const setting = config.get("modesubconfigs", contentState.mode, "allowautofocus") || config.get("allowautofocus")
+    return setting === "true"
 }
 
 async function setInput(el) {

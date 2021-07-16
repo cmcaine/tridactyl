@@ -95,6 +95,21 @@ export class default_config {
     }
 
     /**
+     * Internal field to handle mode-specific configs. Use :setmode/:unsetmode to change these values.
+     *
+     * Changing this might do weird stuff.
+     */
+    modesubconfigs: { [key: string]: DeepPartial<default_config> } = {
+        "normal": {},
+        "insert": {},
+        "input": {},
+        "ignore": {},
+        "ex": {},
+        "hint": {},
+        "visual": {},
+    }
+
+    /**
      * Internal field to handle site-specific config priorities. Use :seturl/:unseturl to change this value.
      */
     priority = 0

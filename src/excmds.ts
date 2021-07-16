@@ -3810,6 +3810,30 @@ export function seturl(pattern: string, key: string, ...values: string[]) {
     return config.setURL(pattern, ...validateSetArgs(key, values))
 }
 
+/**
+ * Usage: `setmode mode key values`
+ *
+ * @param mode The Mode the setting should be set for, e.g. `insert` or `ignore`.
+ * @param key The name of the setting you want to set, e.g. `allowautofocus`
+ * @param values The value you wish for, e.g. `true`
+ *
+ * Currently this command is only supported for the following settings:
+ * - [[allowautofocus]]
+ *
+ * Example:
+ * - `setmode ignore allowautofocus true`
+ */
+//#content
+export function setmode(mode: string, key: string, ...values: string[]) {
+    if (!mode || !key || !values.length) {
+        throw new Error("seturl syntax: mode key value")
+    }
+    if (key !== "allowautofocus")
+        throw new Error("Setting '" + key + "' not supported with setmode")
+
+    return config.set("modesubconfigs", mode, ...validateSetArgs(key, values))
+}
+
 /** Set a key value pair in config.
 
     Use to set any values found [here](/static/docs/classes/_src_lib_config_.default_config.html).
@@ -4039,7 +4063,7 @@ export async function unbind(...args: string[]) {
  *
  * This unbinds `I` in ignore mode on every website the URL of which contains `jupyter`, while keeping the binding active everywhere else.
  *
- * Also see [[bind]], [[bindurl]], [[seturl]], [[unbind]], [[unseturl]]
+ * Also see [[bind]], [[bindurl]], [[seturl]], [[unbind]], [[unseturl]], [[setmode]], [[unsetmode]]
  */
 //#background
 export async function unbindurl(pattern: string, mode: string, keys: string) {
@@ -4075,6 +4099,8 @@ export async function reset(mode: string, key: string) {
  *  - [[unbindurl]]
  *  - [[seturl]]
  *  - [[unseturl]]
+ *  - [[setmode]]
+ *  - [[unsetmode]]
  */
 //#background
 export async function reseturl(pattern: string, mode: string, key: string) {
@@ -4293,6 +4319,23 @@ export function unseturl(pattern: string, key: string) {
         pattern = window.location.href
     }
     return config.unsetURL(pattern, key.split("."))
+}
+
+/**
+ * Reset a mode-specific setting.
+ *
+ * usage: `unsetmode mode key`
+ *
+ * @param mode The mode the setting should be unset on, e.g. `insert`.
+ * @param key The key that should be unset.
+ *
+ * Example: `unsetmode ignore allowautofocus`
+ *
+ * Note that this removes a setting from the mode-specific config, it doesn't "invert" it. This means that if you have a setting set to `false` in your global config and the same setting set to `false` in a mode-specific setting, using `unseturl` will result in the setting still being set to `false`.
+ */
+//#content
+export function unsetmode(mode: string, key: string) {
+    return config.unset("modesubconfigs", mode, ...key.split("."))
 }
 
 /**
