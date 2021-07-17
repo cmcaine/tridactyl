@@ -349,6 +349,8 @@ export class default_config {
         ".": "repeat",
         "<AS-ArrowUp><AS-ArrowUp><AS-ArrowDown><AS-ArrowDown><AS-ArrowLeft><AS-ArrowRight><AS-ArrowLeft><AS-ArrowRight>ba":
             "open https://www.youtube.com/watch?v=M3iOROuTuMA",
+        "m": "gobble 1 markadd",
+        "`": "gobble 1 markjump",
     }
 
     vmaps = {

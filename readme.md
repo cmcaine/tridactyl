@@ -125,6 +125,12 @@ Please note that Tridactyl overrides Firefox's `<C-f>` search, replacing it with
 
 If you want to use Firefox's default `<C-b>` binding to open the bookmarks sidebar, make sure to run `unbind <C-b>` because Tridactyl replaces this setting with one to go to the previous part of the page.
 
+#### Marks
+
+-   `m a-zA-Z` — set a local mark (lowercase letter), or a global mark (uppercase letter)
+-   `` ` a-zA-Z `` — jump to a local mark (lowercase letter), or a global mark (uppercase letter)
+-   ``` `` ``` — jump to the location before the last mark jump
+
 #### Navigating to new pages:
 
 -   `o`/`O` — open a URL (or default search) in this tab (`O` to pre-load current URL)

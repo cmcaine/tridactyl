@@ -327,3 +327,13 @@ export async function openInTab(tab, opts = {}, strarr: string[]) {
         Object.assign({ url: "/static/newtab.html" }, opts),
     )
 }
+
+/**
+ * Set active the tab with tabId and focus the window it is located in.
+ * @param tabId tab identifier
+ */
+export async function goToTab(tabId: number) {
+    const tab = await browserBg.tabs.update(tabId, { active: true });
+    await browserBg.windows.update(tab.windowId, { focused: true });
+    return tab;
+}
