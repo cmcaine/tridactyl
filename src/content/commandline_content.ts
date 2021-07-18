@@ -34,7 +34,8 @@ let enabled = false
 /** Initialise the cmdline_iframe element unless the window location is included in a value of config/noiframe */
 async function init() {
     const noiframe = await config.getAsync("noiframe")
-    if (noiframe === "false" && !enabled) {
+    const notridactyl = await config.getAsync("disable")
+    if (noiframe === "false" && notridactyl !== "true" && !enabled) {
         hide()
         document.documentElement.appendChild(cmdline_iframe)
         enabled = true

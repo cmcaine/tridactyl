@@ -181,6 +181,15 @@ export class default_config {
         "🕷🕷INHERITS🕷🕷": "imaps",
     }
 
+    /*
+     * Disable Tridactyl almost completely within a page, e.g. `seturl ^https?://mail.google.com disable true`. Only takes affect on page reload.
+     *
+     * You are usually better off using `blacklistadd` and `seturl [url] noiframe true` as you can then still use some Tridactyl binds.
+     *
+     * NB: you should only use this with `seturl`. If you get trapped with Tridactyl disabled everywhere just run `tri reset disable` in the Firefox address bar.
+     */
+    disable: "true" | "false" = "false"
+
     /**
      * nmaps contain all of the bindings for "normal mode".
      *

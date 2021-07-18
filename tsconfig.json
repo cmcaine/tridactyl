@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
+    "module": "es2020",
     "esModuleInterop": true,
     "noImplicitAny": false,
     "noEmitOnError": true,
     "outDir": "build/tsc-out",
     "sourceMap": true,
     "target": "es2019",
-    "lib": ["es2019", "dom", "dom.iterable"],
+    "lib": ["es2020", "dom", "dom.iterable"],
     "experimentalDecorators": true,
     "alwaysStrict": true,
     "strictBindCallApply": true,
