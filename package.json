@@ -22,7 +22,7 @@
     "semver-compare": "^1.0.0",
     "stream-browserify": "^3.0.0",
     "tsdef": "^0.0.14",
-    "typedoc": "^0.19.2",
+    "typedoc": "^0.20.37",
     "typedoc-default-themes": "^0.12.10"
   },
   "devDependencies": {
