@@ -26,7 +26,7 @@
     "typedoc-default-themes": "^0.12.10"
   },
   "devDependencies": {
-    "@types/css": "0.0.31",
+    "@types/css": "0.0.33",
     "@types/firefox-webext-browser": "^82.0.0",
     "@types/jest": "^26.0.24",
     "@types/nearley": "^2.11.2",
