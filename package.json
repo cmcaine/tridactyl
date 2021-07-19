@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@types/css": "0.0.31",
-    "@types/firefox-webext-browser": "^82.0.0",
+    "@types/firefox-webext-browser": "^82.0.1",
     "@types/jest": "^26.0.24",
     "@types/nearley": "^2.11.2",
     "@types/selenium-webdriver": "^4.0.15",
